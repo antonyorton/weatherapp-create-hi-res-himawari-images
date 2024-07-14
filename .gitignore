@@ -1,0 +1,4 @@
+node_modules/
+.env
+testing_of_gm/
+backup/
