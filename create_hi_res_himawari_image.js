@@ -1,3 +1,8 @@
+//program to create a high resolution full disk image from the Himawari satellite and push to an S3 bucket
+//
+//It needs to be run in a windows environment due to use of GraphicsMagick
+//(as it is not straightforward for me to make or find a linux build of GraphicsMagic at present)
+
 var himawari = require('./@ungoldman/himawari')
 const path = require('path')
 const fs = require('fs')
@@ -119,6 +124,6 @@ async function pushToS3(data, objectKey) {
   }
 }
 
-// create_himawari_image().then(() => console.log('image created'))
+create_himawari_image().then(() => console.log('image created'))
 
 module.exports = { create_himawari_image }
