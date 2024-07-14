@@ -12,6 +12,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.614.0",
     "async": "^3.2.5",
+    "axios": "^1.7.2",
     "crypto": "^1.0.1",
     "deep-extend": "^0.6.0",
     "dotenv": "^16.4.5",
