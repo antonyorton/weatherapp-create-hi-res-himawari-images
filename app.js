@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
 
 // //render (hobby plan) app is woken up at 25 past the hour from AWS lambda
 //Cron Job 1. Create Himawari image:
-cron.schedule('50, 52, 54, 56, 58, 0, 2, 4 * * * *', () => {
+cron.schedule('50,52,54,56,58,0,2,4 * * * *', () => {
   const myDate = new Date()
   create_himawari_image().then(() => console.log('hi-res Himawari image created. Node-cron task completed at time: ', myDate.toISOString()))
 })
