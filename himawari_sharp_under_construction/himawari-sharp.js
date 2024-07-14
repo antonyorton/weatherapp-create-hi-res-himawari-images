@@ -1,5 +1,5 @@
 //functions to try and create himawari images, based on @ungoldman/himawari (https://github.com/ungoldman/himawari)
-//but updated to use using sharp instead of graphicsmagick
+//but updated to use sharp instead of graphicsmagick
 //NOTE: work in progress as of 27 June 2024
 
 const async = require('async')
