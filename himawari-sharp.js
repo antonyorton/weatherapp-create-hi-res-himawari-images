@@ -1,19 +1,19 @@
 //functions to create composite full disc himawari images
 //based on @ungoldman/himawari (https://github.com/ungoldman/himawari)
 //but updated to use sharp instead of graphicsmagick
-//NOTE: successfully tested on 20 July 2024
+//NOTE: successfully tested on 20 July 2024, Moment library (see ya!) removed on 26 July
 
 const fs = require('fs')
-const moment = require('moment')
 const path = require('path')
 const axios = require('axios')
 
 //promisify the fs module
 const fsPromises = fs.promises
 
-async function download_images(imsize = '4d') {
+async function download_images(imsize = '4d', savedir = './tmp/images/') {
   console.log("Allowable 'imsize' input = 4d (small), 8d (medium) or 16d (large)")
-  const temp_savedir = './himawari_sharp_under_construction/images/'
+  // const temp_savedir = './himawari_sharp_under_construction/images/'
+  const temp_savedir = savedir
 
   for (const file of await fsPromises.readdir(temp_savedir)) {
     await fsPromises.unlink(path.join(temp_savedir, file))
@@ -23,19 +23,6 @@ async function download_images(imsize = '4d') {
   const blocks = imsize.slice(0, imsize.length - 1)
   const width = 550
   console.log('blocks: ', blocks)
-
-  const now = new Date()
-
-  // Format our url paths
-  const time = moment(now).format('HHmmss')
-  const year = moment(now).format('YYYY')
-  const month = moment(now).format('MM')
-  const day = moment(now).format('DD')
-
-  console.log('time:', time)
-  console.log('year:', year)
-  console.log('month:', month)
-  console.log('day:', day)
 
   const base_url = 'https://himawari8-dl.nict.go.jp/himawari8/img/D531106'
   // const url_base = [base_url, level, width, year, month, day, time].join('/')
@@ -65,7 +52,7 @@ async function download_images(imsize = '4d') {
   let uri = ''
   let tempdata
   console.log(`fetching ${tiles.length} images from ${base_url} ..`)
-  Promise.all(
+  return Promise.all(
     tiles.map(async tile => {
       uri = `${base_url}/${level}/${width}/${date}_${tile.x}_${tile.y}.png`
       // const uri = base_url + '/' + level + '/' + width + '/' + date + '_2_4.png'
@@ -109,27 +96,17 @@ const getLatestDate = async base_url => {
     const response = await axios.get(request_url)
     const date = response.data.date
     //convert into the form yyyy/mm/dd/hhmmss
-    const formatted_date = moment(date).format('YYYY/MM/DD/HHmmss')
-    return formatted_date
+    console.log('Himawari date: ', date)
+    // To delete, old use of moment:   const formatted_date = moment(date).format('YYYY/MM/DD/HHmmss')
+    //get date in format 'YYYY/MM/DD/HHmmss'
+    const formattedDate1 = date.replaceAll('-', '/').split(' ')[0]
+    const formattedDate2 = date.replaceAll(':', '').split(' ')[1]
+    return formattedDate1 + '/' + formattedDate2
   } catch (error) {
     console.error('Error fetching latest available datetime:', error.message)
   }
 }
 
-download_images((imsize = '4d'))
+module.exports = { download_images }
 
-// getLatestDate(base_url)
-//   .then(date => {
-//     uri = base_url + '/' + level + '/' + width + '/' + date + '_2_4.png'
-//     console.log(uri)
-//     return asyncFetchImage(uri)
-//   })
-//   .then(data => {
-//     asyncWriteImage(data, './himawari_sharp_under_construction/images/test.jpg')
-//   })
-//   .then(() => {
-//     console.log('Image fetch and write complete')
-//   })
-//   .catch(error => {
-//     console.error('Error:', error)
-//   })
+// download_images((imsize = '8d'))
