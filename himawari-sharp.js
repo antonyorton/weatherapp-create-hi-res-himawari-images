@@ -4,22 +4,22 @@
 //NOTE: successfully tested on 20 July 2024, Moment library (see ya!) removed on 26 July
 
 const fs = require('fs')
+const fsPromises = fs.promises
 const path = require('path')
 const axios = require('axios')
 
-//promisify the fs module
-const fsPromises = fs.promises
-
-async function download_images(imsize = '4d', savedir = './tmp/images/') {
+async function download_images(imsize = '4d', savedir = './tmp/') {
   console.log("Allowable 'imsize' input = 4d (small), 8d (medium) or 16d (large)")
   // const temp_savedir = './himawari_sharp_under_construction/images/'
   const temp_savedir = savedir
 
-  for (const file of await fsPromises.readdir(temp_savedir)) {
-    await fsPromises.unlink(path.join(temp_savedir, file))
-  }
+  // clear local directory
+  // for (const file of await fsPromises.readdir(temp_savedir)) {
+  //   await fsPromises.unlink(path.join(temp_savedir, file))
+  // }
 
   const level = imsize
+  console.log('imsize: ', imsize)
   const blocks = imsize.slice(0, imsize.length - 1)
   const width = 550
   console.log('blocks: ', blocks)
